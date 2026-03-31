@@ -11,7 +11,11 @@ const activityRoutes = require("./routes/activityRoutes");
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173,http://localhost:5174")
+// ✅ ADD YOUR FRONTEND URL HERE (IMPORTANT)
+const allowedOrigins = (
+  process.env.CORS_ORIGIN ||
+  "http://localhost:5173,http://localhost:5174,https://openclaw-hackathon-hackindia-codingzam-kanchan-kapri.onrender.com"
+)
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
@@ -44,6 +48,7 @@ app.get("/", (req, res) => {
   res.json({ message: "ExplainX.ai backend is running." });
 });
 
+// ✅ ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/seniors", seniorRoutes);

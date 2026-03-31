@@ -1,16 +1,16 @@
 import axios from "axios";
 
+// 🔥 Clean base URL
 const normalizeBaseUrl = (url) => {
-  if (!url) {
-    return "";
-  }
+  if (!url) return "";
 
   return String(url)
     .trim()
-    .replace(/\/+$/, "")
-    .replace(/\/api$/, "");
+    .replace(/\/+$/, "") // remove trailing slash
+    .replace(/\/api$/, ""); // remove /api if added
 };
 
+// ✅ Use ENV properly
 const API_BASE_URL =
   normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL) ||
   "https://openclaw-hackathon-hackindia-codingzam.onrender.com";
@@ -20,6 +20,7 @@ const apiClient = axios.create({
   timeout: Number(import.meta.env.VITE_API_TIMEOUT || 15000),
 });
 
+// 🔄 Loading State Management
 let activeRequests = 0;
 const loadingListeners = new Set();
 
@@ -29,7 +30,7 @@ const notifyLoadingListeners = () => {
 };
 
 const startLoading = () => {
-  activeRequests += 1;
+  activeRequests++;
   notifyLoadingListeners();
 };
 
@@ -38,7 +39,6 @@ const stopLoading = () => {
   notifyLoadingListeners();
 };
 
-// Expose loading state updates so a global loader can react to API activity.
 export const subscribeToGlobalLoading = (listener) => {
   loadingListeners.add(listener);
   listener(activeRequests > 0);
@@ -48,6 +48,7 @@ export const subscribeToGlobalLoading = (listener) => {
   };
 };
 
+// 🔐 Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
     startLoading();
@@ -66,6 +67,7 @@ apiClient.interceptors.request.use(
   }
 );
 
+// 🔐 Response Interceptor
 apiClient.interceptors.response.use(
   (response) => {
     stopLoading();
@@ -83,4 +85,3 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
-
