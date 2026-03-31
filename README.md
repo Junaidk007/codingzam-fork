@@ -6,4 +6,4 @@ solo participation : Kanchan Kapri
 Demo Link :  https://youtu.be/lzIVrTOCevs
 
 
-hie judges Please see it in 1.5x speed .
+hie judges Please see it in 1.5x speed ...
