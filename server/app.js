@@ -25,6 +25,8 @@ const allowedOrigins = (
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+const allowAllOrigins = allowedOrigins.includes("*");
+
 const isRenderOrigin = (origin) => {
   try {
     const parsedOrigin = new URL(origin);
@@ -36,10 +38,17 @@ const isRenderOrigin = (origin) => {
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || isRenderOrigin(origin)) {
+    if (
+      !origin ||
+      allowAllOrigins ||
+      allowedOrigins.includes(origin) ||
+      isRenderOrigin(origin)
+    ) {
       return callback(null, true);
     }
-    return callback(new Error("Origin not allowed by CORS"));
+
+    // Return false instead of throwing to avoid 500 on CORS preflight.
+    return callback(null, false);
   },
   credentials: true,
 };
